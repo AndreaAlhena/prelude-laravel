@@ -7,7 +7,7 @@ namespace PreludeSo\Laravel\Tests;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use PreludeSo\Laravel\PreludeServiceProvider;
 
-abstract class TestCase extends BaseTestCase
+class TestCase extends BaseTestCase
 {
     /**
      * Get package providers.
