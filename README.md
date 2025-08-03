@@ -1,4 +1,6 @@
 # Prelude Laravel Package
+[![codecov](https://codecov.io/gh/AndreaAlhena/prelude-laravel/graph/badge.svg?token=NUMXNAHLQR)](https://codecov.io/gh/AndreaAlhena/prelude-laravel)
+[![Made with Trae](https://img.shields.io/badge/Made%20with-Trae%20AI-blueviolet?style=flat&color=32F08B)](https://trae.ai)
 
 A Laravel integration package for the [prelude-so/sdk](https://github.com/prelude-so/sdk), providing seamless integration of Prelude services into your Laravel applications.
 
@@ -41,13 +43,7 @@ If you prefer manual setup:
 php artisan vendor:publish --tag=prelude-config
 ```
 
-2. Copy the example environment file and add your Prelude API credentials:
-
-```bash
-cp .env.example .env
-```
-
-Then update your `.env` file with your actual credentials:
+2. Add your Prelude API credentials to your `.env` file:
 
 ```env
 PRELUDE_API_KEY=your-api-key-here
@@ -212,19 +208,6 @@ composer test           # Run tests
 composer test-coverage  # Run with coverage
 ```
 
-## Contributing
-
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-## Security
-
-If you discover any security-related issues, please email security@prelude.so instead of using the issue tracker.
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Credits
-
-- [Prelude Team](https://github.com/prelude-so)
-- [All Contributors](../../contributors)
