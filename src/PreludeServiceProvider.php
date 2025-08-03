@@ -21,11 +21,12 @@ class PreludeServiceProvider extends ServiceProvider
         $this->app->singleton(PreludeClient::class, function ($app) {
             $config = $app['config']['prelude'];
             
-            return new PreludeClient([
-                'api_key' => $config['api_key'],
-                'base_url' => $config['base_url'],
-                'timeout' => $config['timeout'],
-            ]);
+            // Create client with API key and optional base URL
+            if (!empty($config['base_url']) && $config['base_url'] !== 'https://api.prelude.so') {
+                return new PreludeClient($config['api_key'], $config['base_url']);
+            }
+            
+            return new PreludeClient($config['api_key']);
         });
 
         $this->app->alias(PreludeClient::class, 'prelude');
