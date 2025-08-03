@@ -41,8 +41,8 @@
         }
     },
     "scripts": {
-        "test": "pest",
-        "test-coverage": "pest --coverage-html coverage"
+        "test": "pest tests/",
+        "test-coverage": "pest tests/ --coverage-clover=coverage.xml"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
