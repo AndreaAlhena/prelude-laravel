@@ -3,6 +3,7 @@
 2. When a feature is removed, be sure to remove the unuseful related tests
 3. When a feature is modified, update the test suite accordingly
 4. Run tests before and after the change to ensure everything works as expected
+5. Run commands in the Docker container - never outside
 
 # Coding style
 1. Always separate declarative blocks from imperative blocks
