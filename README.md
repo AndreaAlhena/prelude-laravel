@@ -2,6 +2,12 @@
 
 A Laravel integration package for the [prelude-so/sdk](https://github.com/prelude-so/sdk), providing seamless integration of Prelude services into your Laravel applications.
 
+## Requirements
+
+- **PHP**: 8.1 or higher
+- **Laravel**: 9.0 or higher (supports Laravel 9, 10, and 11)
+- **Composer**: 2.0 or higher
+
 ## Installation
 
 You can install the package via Composer:
