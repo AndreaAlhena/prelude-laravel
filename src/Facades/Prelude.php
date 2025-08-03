@@ -6,14 +6,10 @@ use Illuminate\Support\Facades\Facade;
 use PreludeSo\Sdk\PreludeClient;
 
 /**
- * @method static mixed get(string $endpoint, array $params = [])
- * @method static mixed post(string $endpoint, array $data = [])
- * @method static mixed put(string $endpoint, array $data = [])
- * @method static mixed delete(string $endpoint, array $params = [])
- * @method static mixed patch(string $endpoint, array $data = [])
- * @method static self setTimeout(int $timeout)
- * @method static self setApiKey(string $apiKey)
- * @method static self setBaseUrl(string $baseUrl)
+ * @method static \PreludeSo\Sdk\Services\VerificationService verification()
+ * @method static \PreludeSo\Sdk\Services\LookupService lookup()
+ * @method static \PreludeSo\Sdk\Services\TransactionalService transactional()
+ * @method static \PreludeSo\Sdk\Services\WatchService watch()
  *
  * @see \PreludeSo\Sdk\PreludeClient
  */
@@ -25,5 +21,45 @@ class Prelude extends Facade
     protected static function getFacadeAccessor(): string
     {
         return 'prelude';
+    }
+
+    /**
+     * Get verification service.
+     *
+     * @return mixed
+     */
+    public static function verification()
+    {
+        return static::getFacadeRoot()->verification();
+    }
+
+    /**
+     * Get lookup service.
+     *
+     * @return mixed
+     */
+    public static function lookup()
+    {
+        return static::getFacadeRoot()->lookup();
+    }
+
+    /**
+     * Get transactional service.
+     *
+     * @return mixed
+     */
+    public static function transactional()
+    {
+        return static::getFacadeRoot()->transactional();
+    }
+
+    /**
+     * Get watch service.
+     *
+     * @return mixed
+     */
+    public static function watch()
+    {
+        return static::getFacadeRoot()->watch();
     }
 }
