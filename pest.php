@@ -1,6 +1,8 @@
 <?php
 
-use PreludeSo\Laravel\PreludeServiceProvider;
+declare(strict_types=1);
+
+use PreludeSo\Laravel\Tests\TestCase;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,18 +15,7 @@ use PreludeSo\Laravel\PreludeServiceProvider;
 |
 */
 
-uses(Orchestra\Testbench\TestCase::class)
-    ->beforeEach(function () {
-        // Configure the package providers
-        $this->app->register(PreludeServiceProvider::class);
-        
-        // Set up test environment configuration
-        config([
-            'prelude.api_key' => 'test-api-key',
-            'prelude.base_url' => 'https://api.prelude.so',
-            'prelude.timeout' => 30,
-        ]);
-    })
+uses(TestCase::class)
     ->in('tests');
 
 /*
@@ -38,7 +29,7 @@ uses(Orchestra\Testbench\TestCase::class)
 |
 */
 
-expect()->extend('toBeOne', function () {
+expect()->extend('toBeOne', function (): \Pest\Expectation {
     return $this->toBe(1);
 });
 
@@ -52,23 +43,3 @@ expect()->extend('toBeOne', function () {
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
-
-/**
- * Get package providers for testing.
- */
-function getPackageProviders($app): array
-{
-    return [
-        PreludeServiceProvider::class,
-    ];
-}
-
-/**
- * Define environment setup for testing.
- */
-function defineEnvironment($app): void
-{
-    $app['config']->set('prelude.api_key', 'test-api-key');
-    $app['config']->set('prelude.base_url', 'https://api.prelude.so');
-    $app['config']->set('prelude.timeout', 30);
-}
