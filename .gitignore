@@ -1,6 +1,7 @@
 # Dependencies
 /vendor/
 composer.lock
+.composer
 
 # IDE files
 .idea/
