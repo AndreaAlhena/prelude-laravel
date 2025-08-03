@@ -41,5 +41,5 @@ USER www-data
 # Expose port
 EXPOSE 8000
 
-# Default command
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# Default command - keep container running
+CMD ["tail", "-f", "/dev/null"]
