@@ -43,7 +43,7 @@
     },
     "scripts": {
         "test": "pest tests/",
-        "test-coverage": "pest tests/ --coverage-clover=coverage.xml"
+        "test-coverage": "pest --no-configuration --cache-directory=/tmp/pest-cache --coverage-clover=coverage.xml tests/"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,

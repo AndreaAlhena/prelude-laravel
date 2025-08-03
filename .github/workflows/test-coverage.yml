@@ -34,6 +34,9 @@ jobs:
       - name: List Installed Dependencies
         run: composer show -D
       
+      - name: Create cache directory
+        run: mkdir -p /tmp/pest-cache
+        
       - name: Run tests with coverage
         run: composer run test-coverage
       
