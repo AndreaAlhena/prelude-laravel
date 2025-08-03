@@ -1,0 +1,16 @@
+{
+  "name": "prelude-laravel",
+  "private": true,
+  "scripts": {
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*.php": [
+      "docker-compose exec -T app ./vendor/bin/pest tests/"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.0.0",
+    "lint-staged": "^13.0.3"
+  }
+}
