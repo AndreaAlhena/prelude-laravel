@@ -35,8 +35,7 @@ jobs:
         run: composer show -D
       
       - name: Run tests with coverage
-        run: |
-          ./vendor/bin/pest tests/ --coverage-clover=coverage.xml
+        run: ./vendor/bin/pest tests/ --coverage-clover=coverage.xml
       
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
