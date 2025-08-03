@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prelude-laravel-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - prelude-network
+    environment:
+      - PHP_IDE_CONFIG=serverName=prelude-laravel
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - redis
+
+  mysql:
+    image: mysql:8.0
+    container_name: prelude-laravel-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: prelude_test
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: password
+      MYSQL_USER: prelude
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - prelude-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: prelude-laravel-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - prelude-network
+
+  composer:
+    image: composer:latest
+    container_name: prelude-laravel-composer
+    volumes:
+      - ./:/app
+    working_dir: /app
+    networks:
+      - prelude-network
+    profiles:
+      - tools
+
+  pest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prelude-laravel-pest
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    command: ./vendor/bin/pest
+    networks:
+      - prelude-network
+    profiles:
+      - testing
+    depends_on:
+      - mysql
+      - redis
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  prelude-network:
+    driver: bridge
