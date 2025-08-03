@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PreludeSo\Laravel\Traits;
 
-use PreludeSo\Sdk\PreludeClient;
+use PreludeSo\SDK\PreludeClient;
 
 trait InteractsWithPrelude
 {

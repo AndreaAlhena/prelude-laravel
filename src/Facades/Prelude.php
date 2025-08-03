@@ -7,12 +7,12 @@ namespace PreludeSo\Laravel\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \PreludeSo\Sdk\Services\LookupService lookup()
- * @method static \PreludeSo\Sdk\Services\TransactionalService transactional()
- * @method static \PreludeSo\Sdk\Services\VerificationService verification()
- * @method static \PreludeSo\Sdk\Services\WatchService watch()
+ * @method static \PreludeSo\SDK\Services\LookupService lookup()
+ * @method static \PreludeSo\SDK\Services\TransactionalService transactional()
+ * @method static \PreludeSo\SDK\Services\VerificationService verification()
+ * @method static \PreludeSo\SDK\Services\WatchService watch()
  *
- * @see \PreludeSo\Sdk\PreludeClient
+ * @see \PreludeSo\SDK\PreludeClient
  */
 class Prelude extends Facade
 {

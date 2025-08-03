@@ -6,7 +6,7 @@ namespace PreludeSo\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use PreludeSo\Laravel\Console\Commands\PreludeInstallCommand;
-use PreludeSo\Sdk\PreludeClient;
+use PreludeSo\SDK\PreludeClient;
 
 class PreludeServiceProvider extends ServiceProvider
 {
