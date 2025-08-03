@@ -161,20 +161,49 @@ The configuration file (`config/prelude.php`) supports the following options:
 - `timeout`: Request timeout in seconds
 - `defaults`: Default options for SDK operations
 
+## Development Environment
+
+### Docker Setup (Recommended)
+
+For a consistent development environment, use Docker:
+
+```bash
+# Build and start the environment
+make build
+make up
+
+# Install dependencies
+make install
+
+# Run tests
+make test
+```
+
+See [DOCKER.md](DOCKER.md) for detailed Docker setup instructions.
+
+### Local Setup
+
+Alternatively, set up locally with PHP 8.1+ and Composer:
+
+```bash
+composer install
+```
+
 ## Testing
 
 This package uses [Pest](https://pestphp.com/) for testing.
 
-Run the package tests:
-
+### With Docker:
 ```bash
-composer test
+make test                # Run tests
+make test-coverage      # Run with coverage
+make test-watch         # Run in watch mode
 ```
 
-Or with Pest directly:
-
+### Local Testing:
 ```bash
-./vendor/bin/pest
+composer test           # Run tests
+composer test-coverage  # Run with coverage
 ```
 
 ## Contributing
