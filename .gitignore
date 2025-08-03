@@ -20,6 +20,7 @@ Thumbs.db
 .phpunit.cache/
 coverage/
 .phpunit.result.cache
+coverage.xml
 
 # Environment
 .env
