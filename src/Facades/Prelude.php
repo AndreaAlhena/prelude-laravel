@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PreludeSo\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use PreludeSo\Sdk\PreludeClient;
 
 /**
- * @method static \PreludeSo\Sdk\Services\VerificationService verification()
  * @method static \PreludeSo\Sdk\Services\LookupService lookup()
  * @method static \PreludeSo\Sdk\Services\TransactionalService transactional()
+ * @method static \PreludeSo\Sdk\Services\VerificationService verification()
  * @method static \PreludeSo\Sdk\Services\WatchService watch()
  *
  * @see \PreludeSo\Sdk\PreludeClient
@@ -24,41 +25,33 @@ class Prelude extends Facade
     }
 
     /**
-     * Get verification service.
-     *
-     * @return mixed
-     */
-    public static function verification()
-    {
-        return static::getFacadeRoot()->verification();
-    }
-
-    /**
      * Get lookup service.
-     *
-     * @return mixed
      */
-    public static function lookup()
+    public static function lookup(): mixed
     {
         return static::getFacadeRoot()->lookup();
     }
 
     /**
      * Get transactional service.
-     *
-     * @return mixed
      */
-    public static function transactional()
+    public static function transactional(): mixed
     {
         return static::getFacadeRoot()->transactional();
     }
 
     /**
-     * Get watch service.
-     *
-     * @return mixed
+     * Get verification service.
      */
-    public static function watch()
+    public static function verification(): mixed
+    {
+        return static::getFacadeRoot()->verification();
+    }
+
+    /**
+     * Get watch service.
+     */
+    public static function watch(): mixed
     {
         return static::getFacadeRoot()->watch();
     }

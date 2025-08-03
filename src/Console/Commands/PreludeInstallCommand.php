@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PreludeSo\Laravel\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -8,14 +10,14 @@ use Illuminate\Support\Facades\File;
 class PreludeInstallCommand extends Command
 {
     /**
-     * The name and signature of the console command.
-     */
-    protected $signature = 'prelude:install {--force : Overwrite existing configuration}';
-
-    /**
      * The console command description.
      */
     protected $description = 'Install and configure the Prelude Laravel package';
+
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'prelude:install {--force : Overwrite existing configuration}';
 
     /**
      * Execute the console command.
@@ -24,16 +26,18 @@ class PreludeInstallCommand extends Command
     {
         $this->info('Installing Prelude Laravel package...');
 
-        // Publish configuration
-        $this->call('vendor:publish', [
-            '--tag' => 'prelude-config',
-            '--force' => $this->option('force'),
-        ]);
+        $this->_publishConfiguration();
+        $this->_updateEnvironmentFiles();
+        $this->_displaySuccessMessage();
 
-        // Add environment variables to .env and .env.example if they don't exist
-        $this->updateEnvironmentFile('.env');
-        $this->updateEnvironmentFile('.env.example');
+        return self::SUCCESS;
+    }
 
+    /**
+     * Display success message and next steps.
+     */
+    private function _displaySuccessMessage(): void
+    {
         $this->info('Prelude Laravel package installed successfully!');
         $this->line('');
         $this->line('Next steps:');
@@ -41,14 +45,35 @@ class PreludeInstallCommand extends Command
         $this->line('2. Optionally configure other settings in config/prelude.php');
         $this->line('3. Start using the Prelude facade or inject PreludeClient in your classes');
         $this->line('4. Share the updated .env.example file with your team');
+    }
 
-        return self::SUCCESS;
+    /**
+     * Get default environment variables.
+     */
+    private function _getDefaultVariables(): array
+    {
+        return [
+            '# PRELUDE_BASE_URL' => 'https://api.prelude.so',
+            '# PRELUDE_TIMEOUT' => '30',
+            'PRELUDE_API_KEY' => 'your_prelude_api_key_here',
+        ];
+    }
+
+    /**
+     * Publish configuration files.
+     */
+    private function _publishConfiguration(): void
+    {
+        $this->call('vendor:publish', [
+            '--force' => $this->option('force'),
+            '--tag' => 'prelude-config',
+        ]);
     }
 
     /**
      * Update environment file with Prelude variables.
      */
-    protected function updateEnvironmentFile(string $filename): void
+    private function _updateEnvironmentFile(string $filename): void
     {
         $filePath = base_path($filename);
         
@@ -59,18 +84,14 @@ class PreludeInstallCommand extends Command
                 return;
             } else {
                 $this->warn($filename . ' file not found. Creating one with Prelude variables.');
-                $fileContent = "";
+                $fileContent = '';
             }
         } else {
             $fileContent = File::get($filePath);
         }
 
         $newVariables = [];
-        $variables = [
-            'PRELUDE_API_KEY' => 'your_prelude_api_key_here',
-            '# PRELUDE_BASE_URL' => 'https://api.prelude.so',
-            '# PRELUDE_TIMEOUT' => '30',
-        ];
+        $variables = $this->_getDefaultVariables();
 
         foreach ($variables as $key => $defaultValue) {
             $cleanKey = ltrim($key, '# ');
@@ -89,5 +110,14 @@ class PreludeInstallCommand extends Command
         } else {
             $this->line('Prelude environment variables already exist in ' . $filename . ' file.');
         }
+    }
+
+    /**
+     * Update both .env and .env.example files.
+     */
+    private function _updateEnvironmentFiles(): void
+    {
+        $this->_updateEnvironmentFile('.env');
+        $this->_updateEnvironmentFile('.env.example');
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PreludeSo\Laravel\Traits;
 
 use PreludeSo\Sdk\PreludeClient;
@@ -7,35 +9,19 @@ use PreludeSo\Sdk\PreludeClient;
 trait InteractsWithPrelude
 {
     /**
-     * Get the Prelude client instance.
+     * Check a verification OTP code.
      */
-    protected function prelude(): PreludeClient
+    protected function checkVerification(mixed $verificationId, mixed $code): mixed
     {
-        return app(PreludeClient::class);
+        return $this->_prelude()->verification()->check($verificationId, $code);
     }
 
     /**
      * Create a verification for a phone number or email.
      */
-    protected function createVerification(string $target, $targetType = null, array $options = []): mixed
+    protected function createVerification(mixed $target, mixed $targetType = null, mixed $options = null): mixed
     {
-        return $this->prelude()->verification()->create($target, $targetType, $options);
-    }
-
-    /**
-     * Check a verification OTP code.
-     */
-    protected function checkVerification(string $verificationId, string $code): mixed
-    {
-        return $this->prelude()->verification()->check($verificationId, $code);
-    }
-
-    /**
-     * Resend OTP for a verification.
-     */
-    protected function resendVerificationOtp(string $verificationId): mixed
-    {
-        return $this->prelude()->verification()->resendOtp($verificationId);
+        return $this->_prelude()->verification()->create($target, $targetType, $options);
     }
 
     /**
@@ -43,34 +29,60 @@ trait InteractsWithPrelude
      */
     protected function lookupPhoneNumber(string $phoneNumber, array $features = []): mixed
     {
-        return $this->prelude()->lookup()->lookup($phoneNumber, $features);
+        return $this->_prelude()->lookup()->lookup($phoneNumber, $features);
+    }
+
+    /**
+     * Resend OTP for a verification.
+     */
+    protected function resendVerificationOtp(string $verificationId): mixed
+    {
+        return $this->_prelude()->verification()->resendOtp($verificationId);
     }
 
     /**
      * Send a transactional message.
      */
-    protected function sendTransactionalMessage(string $target, string $templateId, $options = null): mixed
+    protected function sendTransactionalMessage(string $target, string $templateId, mixed $options = null): mixed
     {
-        return $this->prelude()->transactional()->send($target, $templateId, $options);
+        return $this->_prelude()->transactional()->send($target, $templateId, $options);
     }
 
     /**
      * Sync model data with Prelude.
      */
-    protected function syncWithPrelude(array $data, string $endpoint = null): mixed
+    protected function syncWithPrelude(array $data, string $endpoint = ''): mixed
     {
-        $endpoint = $endpoint ?? $this->getPreludeEndpoint();
+        $endpoint = $endpoint ?: $this->_getPreludeEndpoint();
         
-        return $this->sendToPrelude($endpoint, $data);
+        return $this->_sendToPrelude($endpoint, $data);
     }
 
     /**
      * Get the default Prelude endpoint for this model.
      * Override this method in your model to customize the endpoint.
      */
-    protected function getPreludeEndpoint(): string
+    private function _getPreludeEndpoint(): string
     {
         $className = class_basename($this);
         return '/api/' . strtolower($className);
+    }
+
+    /**
+     * Get the Prelude client instance.
+     */
+    private function _prelude(): PreludeClient
+    {
+        return app(PreludeClient::class);
+    }
+
+    /**
+     * Send data to Prelude endpoint.
+     */
+    private function _sendToPrelude(string $endpoint, array $data): mixed
+    {
+        // Implementation would depend on specific requirements
+        // This is a placeholder for the actual implementation
+        return $this->_prelude();
     }
 }
