@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use PreludeSo\Laravel\Facades\Prelude;
 use PreludeSo\Laravel\Http\Requests\CheckVerificationRequest;
 use PreludeSo\Laravel\Http\Requests\CreateVerificationRequest;
+use PreludeSo\Laravel\Http\Requests\PredictOutcomeRequest;
 use PreludeSo\Laravel\Http\Requests\SendTransactionalRequest;
 use PreludeSo\Laravel\Traits\InteractsWithPrelude;
 use PreludeSo\Sdk\PreludeClient;
@@ -211,6 +212,51 @@ class UserController extends Controller
                 'template_id' => $templateId,
                 'has_options' => !empty($options),
                 'has_metadata' => !empty($metadata),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Example: Predict outcome with comprehensive validation using PredictOutcomeRequest.
+     */
+    public function predictOutcomeWithValidation(PredictOutcomeRequest $request): JsonResponse
+    {
+        try {
+            // All validation is handled by PredictOutcomeRequest
+            // Access validated data safely
+            $target = $request->validated('target');
+            $signals = $request->validated('signals');
+            $metadata = $request->validated('metadata');
+            $dispatchId = $request->validated('dispatch_id');
+            
+            // Create target object for SDK
+            $targetObject = new \PreludeSo\Sdk\Target(
+                $target['value'],
+                $target['type']
+            );
+            
+            // Create signals object for SDK
+            $signalsObject = new \PreludeSo\Sdk\Signals($signals);
+            
+            // Create metadata object for SDK if provided
+            $metadataObject = null;
+            if ($metadata) {
+                $metadataObject = new \PreludeSo\Sdk\Metadata($metadata);
+            }
+            
+            // Predict outcome using the SDK
+            $result = Prelude::predictOutcome($targetObject, $signalsObject, $dispatchId, $metadataObject);
+            
+            return response()->json([
+                'prediction_id' => $result->getId(),
+                'outcome' => $result->getOutcome(),
+                'confidence' => $result->getConfidence(),
+                'target_type' => $target['type'],
+                'has_signals' => !empty($signals),
+                'has_metadata' => !empty($metadata),
+                'dispatch_id' => $dispatchId,
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

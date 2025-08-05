@@ -256,6 +256,48 @@ class VerificationController extends Controller
 }
 ```
 
+#### PredictOutcomeRequest
+
+For predicting outcomes with comprehensive validation:
+
+```php
+use PreludeSo\Laravel\Http\Requests\PredictOutcomeRequest;
+
+class PredictionController extends Controller
+{
+    public function predictOutcome(PredictOutcomeRequest $request)
+    {
+        // All validation is handled automatically
+        $target = $request->validated('target');
+        $signals = $request->validated('signals');
+        $metadata = $request->validated('metadata');
+        $dispatchId = $request->validated('dispatch_id');
+        
+        // Create objects for SDK
+        $targetObject = new \PreludeSo\Sdk\Target(
+            $target['value'],
+            $target['type']
+        );
+        
+        $signalsObject = new \PreludeSo\Sdk\Signals($signals);
+        
+        $metadataObject = null;
+        if ($metadata) {
+            $metadataObject = new \PreludeSo\Sdk\Metadata($metadata);
+        }
+        
+        // Predict outcome using the SDK
+        $result = Prelude::predictOutcome($targetObject, $signalsObject, $dispatchId, $metadataObject);
+        
+        return response()->json([
+            'prediction_id' => $result->getId(),
+            'outcome' => $result->getOutcome(),
+            'confidence' => $result->getConfidence()
+        ]);
+    }
+}
+```
+
 #### Supported Validation Parameters
 
 **CreateVerificationRequest** includes validation rules for all SDK parameters:
@@ -294,6 +336,33 @@ class VerificationController extends Controller
 
 - **Code** (required): Verification code validation
   - `code`: String with length between 4-10 characters
+
+**PredictOutcomeRequest** includes validation rules for outcome prediction:
+
+- **Target** (required): Phone number or email validation
+  - `target.type`: Must be 'phone_number' or 'email_address'
+  - `target.value`: Validated based on the target type
+
+- **Signals** (required): Browser/device information for fraud detection
+  - `signals.ip_address`: Valid IP address
+  - `signals.user_agent`: Browser user agent string
+  - `signals.device_fingerprint`: Device identification
+  - `signals.browser_plugins`: Array of browser plugins
+  - `signals.screen_resolution`: Screen resolution information
+  - `signals.timezone`: User timezone
+  - `signals.language`: User language preference
+  - `signals.session_id`: Session identifier
+  - `signals.timestamp`: Request timestamp
+
+- **Metadata** (optional): Custom tracking data
+  - `metadata.user_id`: Your internal user ID
+  - `metadata.source`: Request source identifier
+  - `metadata.campaign_id`: Marketing campaign tracking
+  - `metadata.reference_id`: Reference identifier
+  - `metadata.custom_fields`: Additional custom data
+
+- **Dispatch ID** (optional): Frontend SDK integration
+  - `dispatch_id`: ID from Prelude's JavaScript SDK for enhanced fraud detection
 
 **SendTransactionalRequest** includes validation rules for transactional messaging:
 
