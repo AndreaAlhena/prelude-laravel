@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PreludeSo\Laravel\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
+
 use PreludeSo\Laravel\PreludeServiceProvider;
 
 class TestCase extends BaseTestCase
