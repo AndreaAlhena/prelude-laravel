@@ -14,6 +14,9 @@ class CheckVerificationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // Code (required) - verification code to check
+            'code' => 'required|string|min:4|max:10',
+
             // Target (required) - phone number or email
             'target.type' => 'required|string|in:phone_number,email_address',
             'target.value' => [
@@ -28,9 +31,6 @@ class CheckVerificationRequest extends FormRequest
                     }
                 },
             ],
-
-            // Code (required) - verification code to check
-            'code' => 'required|string|min:4|max:10',
         ];
     }
 }
