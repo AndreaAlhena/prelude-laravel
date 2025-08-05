@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `CreateVerificationRequest` class extending Laravel's FormRequest with comprehensive validation rules
 - `CheckVerificationRequest` class for validating verification check parameters
+- `SendTransactionalRequest` class for validating transactional message send parameters
 - Complete validation support for all Prelude SDK parameters:
   - Target validation (phone number and email with type-specific validation)
   - Signals validation (browser/device information for fraud detection)
@@ -17,10 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Metadata validation (custom tracking and user data)
   - Dispatch ID validation (frontend SDK integration)
   - Code validation (verification code with length constraints)
+  - Transactional options validation (channel, priority, scheduling, callbacks, variables)
 - Built-in phone number validation with international format support
 - Email address validation for email-based verifications
 - `CreateOtpRequest` example demonstrating CreateVerificationRequest customization
 - Example usage of `CheckVerificationRequest` in UserController
+- Example usage of `SendTransactionalRequest` in UserController with comprehensive validation
 - Comprehensive test suite with actual data validation scenarios
 - Test coverage for both valid and invalid data cases across all validation rules
 - Support for `illuminate/foundation` package
