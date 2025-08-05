@@ -6,6 +6,7 @@ namespace PreludeSo\Laravel\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
+
 use PreludeSo\SDK\Enums\LookupType;
 
 class LookupRequest extends FormRequest
