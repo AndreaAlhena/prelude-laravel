@@ -298,6 +298,45 @@ class PredictionController extends Controller
 }
 ```
 
+#### LookupRequest
+
+For looking up phone number information with comprehensive validation:
+
+```php
+use PreludeSo\Laravel\Http\Requests\LookupRequest;
+
+class LookupController extends Controller
+{
+    public function lookupPhoneNumber(LookupRequest $request)
+    {
+        // All validation is handled automatically
+        $phoneNumber = $request->validated('phone_number');
+        $type = $request->validated('type', []);
+        
+        // Lookup phone number using the SDK
+        $result = Prelude::lookup()->lookup($phoneNumber, $type);
+        
+        return response()->json([
+            'phone_number' => $result->getPhoneNumber(),
+            'country_code' => $result->getCountryCode(),
+            'line_type' => $result->getLineType()?->value,
+            'caller_name' => $result->getCallerName(),
+            'flags' => array_map(fn($flag) => $flag->value, $result->getFlags()),
+            'network_info' => [
+                'carrier_name' => $result->getNetworkInfo()->getCarrierName(),
+                'mcc' => $result->getNetworkInfo()->getMcc(),
+                'mnc' => $result->getNetworkInfo()->getMnc(),
+            ],
+            'original_network_info' => [
+                'carrier_name' => $result->getOriginalNetworkInfo()->getCarrierName(),
+                'mcc' => $result->getOriginalNetworkInfo()->getMcc(),
+                'mnc' => $result->getOriginalNetworkInfo()->getMnc(),
+            ],
+        ]);
+    }
+}
+```
+
 #### SendFeedbackRequest
 
 For sending feedback about verifications with comprehensive validation:
@@ -418,6 +457,21 @@ class FeedbackController extends Controller
 
 - **Dispatch ID** (optional): Frontend SDK integration
   - `dispatch_id`: ID from Prelude's JavaScript SDK for enhanced fraud detection
+
+**LookupRequest** includes validation rules for phone number lookup:
+
+- **Phone Number** (required): Phone number in E.164 format
+  - `phone_number`: Must be in E.164 format (e.g., +1234567890)
+  - Validates international format with country code
+  - Length between 7-15 digits (including country code)
+
+- **Type** (optional): Array of lookup features to retrieve
+- `type`: Optional array of lookup feature strings
+- `type.*`: Each type must be a valid LookupType enum value
+- Available lookup types (defined in `LookupType` enum):
+  - `cnam`: Caller Name (CNAM) information
+  - `network_info`: Network and carrier information
+  - `fraud`: Fraud detection and risk analysis
 
 **SendFeedbackRequest** includes validation rules for feedback submission:
 

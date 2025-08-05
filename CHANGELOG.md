@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `LookupRequest` class for validating phone number lookup parameters
+- Phone number validation with E.164 format support (7-15 digits with country code)
+- Optional lookup type validation using LookupType enum supporting 'cnam', 'network_info', and 'fraud'
+- Example usage of `LookupRequest` in UserController with comprehensive response handling
+- Complete test suite for LookupRequest with 12 test cases covering valid and invalid scenarios
+- Documentation for LookupRequest usage and validation parameters in README.md
+
 ## [1.1.0] - 2025-08-05
 
 ### Added
