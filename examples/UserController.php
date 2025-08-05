@@ -16,7 +16,6 @@ use PreludeSo\Laravel\Http\Requests\SendFeedbackRequest;
 use PreludeSo\Laravel\Http\Requests\SendTransactionalRequest;
 use PreludeSo\Laravel\Traits\InteractsWithPrelude;
 use PreludeSo\Sdk\PreludeClient;
-use PreludeSo\Sdk\Target;
 
 /**
  * Example controller demonstrating Prelude package usage.
