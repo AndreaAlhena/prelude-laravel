@@ -10,8 +10,10 @@ use Illuminate\Routing\Controller;
 use PreludeSo\Laravel\Facades\Prelude;
 use PreludeSo\Laravel\Http\Requests\CheckVerificationRequest;
 use PreludeSo\Laravel\Http\Requests\CreateVerificationRequest;
+use PreludeSo\Laravel\Http\Requests\SendTransactionalRequest;
 use PreludeSo\Laravel\Traits\InteractsWithPrelude;
 use PreludeSo\Sdk\PreludeClient;
+use PreludeSo\Sdk\Target;
 
 /**
  * Example controller demonstrating Prelude package usage.
@@ -172,6 +174,43 @@ class UserController extends Controller
                 'message_id' => $result->getId(),
                 'status' => $result->getStatus(),
                 'sent_at' => $result->getSentAt()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Example: Send transactional message with comprehensive validation using SendTransactionalRequest.
+     */
+    public function sendTransactionalWithValidation(SendTransactionalRequest $request): JsonResponse
+    {
+        try {
+            // All validation is handled by SendTransactionalRequest
+            // Access validated data safely
+            $to = $request->validated('to');
+            $templateId = $request->validated('template_id');
+            $options = $request->validated('options');
+            $metadata = $request->validated('metadata');
+            
+            // Create options object for SDK if provided
+            $optionsObject = null;
+            if ($options) {
+                // Note: This example shows the structure - actual SDK Options class may vary
+                $optionsObject = new \PreludeSo\Sdk\Options($options);
+            }
+            
+            // Send transactional message using the SDK
+            $result = Prelude::transactional()->send($to, $templateId, $optionsObject);
+            
+            return response()->json([
+                'message_id' => $result->getId(),
+                'status' => $result->getStatus(),
+                'sent_at' => $result->getSentAt(),
+                'recipient' => $to,
+                'template_id' => $templateId,
+                'has_options' => !empty($options),
+                'has_metadata' => !empty($metadata),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
