@@ -152,7 +152,66 @@ class VerificationService
 }
 ```
 
+### Form Requests with Prelude Integration
 
+The package provides a `CreateVerificationRequest` class that extends Laravel's FormRequest with comprehensive validation rules for all Prelude SDK parameters:
+
+```php
+use PreludeSo\Laravel\Http\Requests\CreateVerificationRequest;
+
+// Use the base class directly with all validation rules
+$request = new CreateVerificationRequest();
+
+// Or extend it for custom requirements
+class CreateOtpRequest extends CreateVerificationRequest
+{
+    public function rules(): array
+    {
+        // Option 1: Use all parent rules
+        return parent::rules();
+        
+        // Option 2: Override with custom rules
+        return [
+            'target.type' => 'required|string|in:phone_number',
+            'target.value' => 'required|string|regex:/^\+?[1-9]\d{1,14}$/',
+            'signals' => 'nullable|array',
+            'options' => 'nullable|array',
+            'metadata' => 'nullable|array',
+            'dispatch_id' => 'nullable|string',
+        ];
+    }
+}
+```
+
+#### Supported Validation Parameters
+
+The `CreateVerificationRequest` includes validation rules for all SDK parameters:
+
+- **Target** (required): Phone number or email validation
+  - `target.type`: Must be 'phone_number' or 'email_address'
+  - `target.value`: Validated based on the target type
+
+- **Signals** (optional): Browser/device information
+  - `signals.ip_address`: Valid IP address
+  - `signals.user_agent`: Browser user agent string
+  - `signals.device_fingerprint`: Device identification
+  - And more browser-related fields
+
+- **Options** (optional): Verification configuration
+  - `options.template`: Custom message template
+  - `options.expiry_minutes`: OTP expiration time (1-60 minutes)
+  - `options.code_length`: OTP length (4-10 digits)
+  - `options.channel`: Delivery method (sms, voice, email, whatsapp)
+  - And more configuration options
+
+- **Metadata** (optional): Custom tracking data
+  - `metadata.user_id`: Your internal user ID
+  - `metadata.source`: Request source identifier
+  - `metadata.campaign_id`: Marketing campaign tracking
+  - `metadata.custom_fields`: Additional custom data
+
+- **Dispatch ID** (optional): Frontend SDK integration
+  - `dispatch_id`: ID from Prelude's JavaScript SDK for enhanced fraud detection
 
 ## Configuration Options
 
@@ -161,6 +220,7 @@ The configuration file (`config/prelude.php`) supports the following options:
 - `api_key`: Your Prelude API key
 - `base_url`: The base URL for the Prelude API
 - `timeout`: Request timeout in seconds
+
 - `defaults`: Default options for SDK operations
 
 ## Development Environment

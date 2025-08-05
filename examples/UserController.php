@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use PreludeSo\Laravel\Facades\Prelude;
+use PreludeSo\Laravel\Http\Requests\CreateVerificationRequest;
 use PreludeSo\Laravel\Traits\InteractsWithPrelude;
 use PreludeSo\Sdk\PreludeClient;
 
@@ -26,6 +27,46 @@ use PreludeSo\Sdk\PreludeClient;
 class UserController extends Controller
 {
     use InteractsWithPrelude;
+    /**
+     * Example: Create verification with comprehensive validation using CreateVerificationRequest.
+     */
+    public function createVerificationWithValidation(CreateVerificationRequest $request): JsonResponse
+    {
+        try {
+            // All validation is handled by CreateVerificationRequest
+            // Access validated data safely
+            $target = $request->validated('target');
+            $signals = $request->validated('signals');
+            $options = $request->validated('options');
+            $metadata = $request->validated('metadata');
+            $dispatchId = $request->validated('dispatch_id');
+            
+            // Create verification with all parameters
+            // Note: This example shows the structure - actual SDK integration may vary
+            $verification = Prelude::verification()->create(
+                $target['value'],
+                $target['type'],
+                [
+                    'signals' => $signals,
+                    'options' => $options,
+                    'metadata' => $metadata,
+                    'dispatch_id' => $dispatchId,
+                ]
+            );
+            
+            return response()->json([
+                'verification_id' => $verification->getId(),
+                'status' => $verification->getStatus(),
+                'expires_at' => $verification->getExpiresAt(),
+                'target_type' => $target['type'],
+                'has_signals' => !empty($signals),
+                'has_metadata' => !empty($metadata),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     /**
      * Example: Create a phone verification using the Facade.
      */

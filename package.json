@@ -6,7 +6,7 @@
   },
   "lint-staged": {
     "**/*.php": [
-      "docker-compose exec -T app ./vendor/bin/pest tests/"
+      "make test"
     ]
   },
   "devDependencies": {

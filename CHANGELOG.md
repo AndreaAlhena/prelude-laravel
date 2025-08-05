@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `CreateVerificationRequest` class extending Laravel's FormRequest with comprehensive validation rules
+- Complete validation support for all Prelude SDK parameters:
+  - Target validation (phone number and email with type-specific validation)
+  - Signals validation (browser/device information for fraud detection)
+  - Options validation (verification configuration like expiry, code length, channel)
+  - Metadata validation (custom tracking and user data)
+  - Dispatch ID validation (frontend SDK integration)
+- Built-in phone number validation with international format support
+- Email address validation for email-based verifications
+- `CreateOtpRequest` example demonstrating CreateVerificationRequest customization
+- Comprehensive test suite with actual data validation scenarios
+- Test coverage for both valid and invalid data cases across all validation rules
+- Support for `illuminate/foundation` package
+
+### Changed
+- Enhanced FormRequest implementation with full SDK parameter support
+- Updated validation structure from simple phone_number to comprehensive Target object
+- Removed complex validation error logging and configuration options
+- Updated Laravel compatibility to support Laravel 9.0+ (previously 12.0+ only)
+- Updated PHP requirement to ^8.1 (previously ^8.2)
+- Updated illuminate/support to support ^9.0|^10.0|^11.0|^12.0
+- Updated orchestra/testbench to support ^7.0|^8.0|^9.0|^10.0
+- Updated Pest dependencies to support both v2 and v3
+- Removed redundant laravel/framework and illuminate/foundation dependencies
+- Removed public `prelude()` method from `InteractsWithPrelude` trait to improve encapsulation
+
 ## [1.0.1] - 2024-12-19
 
 ### Added
