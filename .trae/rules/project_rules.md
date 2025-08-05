@@ -21,7 +21,7 @@
 1. Sort enum cases alphabetically
 
 ## Import statements
-1. Always remove unused import statements
-2. Sort import statements alphabetically
-3. Group import statements by type (e.g. core PHP, external libraries, internal classes)
-4. Group import statements by namespace (e.g. Symfony components, Laravel facades, custom classes)
+1. Always remove unused use statements
+2. Sort use statements alphabetically
+3. Group use statements by type (e.g. core PHP, external libraries, internal classes)
+4. Group use statements by namespace (e.g. Symfony components, Laravel facades, custom classes)
