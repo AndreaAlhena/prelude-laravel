@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CreateVerificationRequest` class extending Laravel's FormRequest with comprehensive validation rules
 - `CheckVerificationRequest` class for validating verification check parameters
 - `PredictOutcomeRequest` class for validating outcome prediction parameters
+- `SendFeedbackRequest` class for validating feedback submission parameters with Target, type, Signals, Metadata, and dispatch_id
 - `SendTransactionalRequest` class for validating transactional message send parameters
 - Complete validation support for all Prelude SDK parameters:
   - Target validation (phone number and email with type-specific validation)
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CreateOtpRequest` example demonstrating CreateVerificationRequest customization
 - Example usage of `CheckVerificationRequest` in UserController
 - Example usage of `PredictOutcomeRequest` in UserController with comprehensive validation
+- Example usage of `SendFeedbackRequest` in UserController with comprehensive validation
 - Example usage of `SendTransactionalRequest` in UserController with comprehensive validation
 - Comprehensive test suite with actual data validation scenarios
 - Test coverage for both valid and invalid data cases across all validation rules

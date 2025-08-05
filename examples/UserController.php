@@ -11,6 +11,7 @@ use PreludeSo\Laravel\Facades\Prelude;
 use PreludeSo\Laravel\Http\Requests\CheckVerificationRequest;
 use PreludeSo\Laravel\Http\Requests\CreateVerificationRequest;
 use PreludeSo\Laravel\Http\Requests\PredictOutcomeRequest;
+use PreludeSo\Laravel\Http\Requests\SendFeedbackRequest;
 use PreludeSo\Laravel\Http\Requests\SendTransactionalRequest;
 use PreludeSo\Laravel\Traits\InteractsWithPrelude;
 use PreludeSo\Sdk\PreludeClient;
@@ -257,6 +258,66 @@ class UserController extends Controller
                 'has_signals' => !empty($signals),
                 'has_metadata' => !empty($metadata),
                 'dispatch_id' => $dispatchId,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Example: Send feedback with comprehensive validation using SendFeedbackRequest.
+     */
+    public function sendFeedbackWithValidation(SendFeedbackRequest $request): JsonResponse
+    {
+        try {
+            // All validation is handled by SendFeedbackRequest
+            // Access validated data safely
+            $feedbacks = $request->validated('feedbacks');
+            
+            // Create feedback objects for SDK
+            $feedbackObjects = [];
+            foreach ($feedbacks as $feedback) {
+                // Create target object
+                $targetObject = new \PreludeSo\Sdk\ValueObjects\Shared\Target(
+                    $feedback['target']['value'],
+                    $feedback['target']['type']
+                );
+                
+                // Create signals object if provided
+                $signalsObject = null;
+                if (!empty($feedback['signals'])) {
+                    $signalsObject = new \PreludeSo\Sdk\ValueObjects\Shared\Signals($feedback['signals']);
+                }
+                
+                // Create metadata object if provided
+                $metadataObject = null;
+                if (!empty($feedback['metadata'])) {
+                    $metadataObject = new \PreludeSo\Sdk\ValueObjects\Shared\Metadata($feedback['metadata']);
+                }
+                
+                $feedbackObjects[] = new \PreludeSo\Sdk\ValueObjects\Watch\Feedback(
+                    $targetObject,
+                    $feedback['type'],
+                    $signalsObject,
+                    $feedback['dispatch_id'] ?? '',
+                    $metadataObject
+                );
+            }
+            
+            // Send feedback using the SDK
+            $result = Prelude::sendFeedback($feedbackObjects);
+            
+            return response()->json([
+                'success' => $result->isSuccess(),
+                'processed_count' => count($feedbackObjects),
+                'feedbacks_sent' => array_map(function($feedback) {
+                    return [
+                        'target' => $feedback['target'],
+                        'type' => $feedback['type'],
+                        'has_signals' => !empty($feedback['signals']),
+                        'has_metadata' => !empty($feedback['metadata']),
+                    ];
+                }, $feedbacks),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

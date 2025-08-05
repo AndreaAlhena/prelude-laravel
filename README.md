@@ -298,6 +298,61 @@ class PredictionController extends Controller
 }
 ```
 
+#### SendFeedbackRequest
+
+For sending feedback about verifications with comprehensive validation:
+
+```php
+use PreludeSo\Laravel\Http\Requests\SendFeedbackRequest;
+
+class FeedbackController extends Controller
+{
+    public function sendFeedback(SendFeedbackRequest $request)
+    {
+        // All validation is handled automatically
+        $feedbacks = $request->validated('feedbacks');
+        
+        // Create feedback objects for SDK
+        $feedbackObjects = [];
+        foreach ($feedbacks as $feedback) {
+            // Create target object
+            $targetObject = new \PreludeSo\Sdk\ValueObjects\Shared\Target(
+                $feedback['target']['value'],
+                $feedback['target']['type']
+            );
+            
+            // Create signals object if provided
+            $signalsObject = null;
+            if (!empty($feedback['signals'])) {
+                $signalsObject = new \PreludeSo\Sdk\ValueObjects\Shared\Signals($feedback['signals']);
+            }
+            
+            // Create metadata object if provided
+            $metadataObject = null;
+            if (!empty($feedback['metadata'])) {
+                $metadataObject = new \PreludeSo\Sdk\ValueObjects\Shared\Metadata($feedback['metadata']);
+            }
+            
+            $feedbackObjects[] = new \PreludeSo\Sdk\ValueObjects\Watch\Feedback(
+                $targetObject,
+                $feedback['type'],
+                $signalsObject,
+                $feedback['dispatch_id'] ?? '',
+                $metadataObject
+            );
+        }
+        
+        // Send feedback using the SDK
+        $result = Prelude::sendFeedback($feedbackObjects);
+        
+        return response()->json([
+            'success' => $result->isSuccess(),
+            'processed_count' => count($feedbackObjects)
+        ]);
+    }
+}
+```
+
 #### Supported Validation Parameters
 
 **CreateVerificationRequest** includes validation rules for all SDK parameters:
@@ -363,6 +418,27 @@ class PredictionController extends Controller
 
 - **Dispatch ID** (optional): Frontend SDK integration
   - `dispatch_id`: ID from Prelude's JavaScript SDK for enhanced fraud detection
+
+**SendFeedbackRequest** includes validation rules for feedback submission:
+
+- **Feedbacks** (required): Array of feedback objects
+  - `feedbacks`: Required array with minimum 1 item
+  - `feedbacks.*.target`: Required target object with phone number or email validation
+    - `feedbacks.*.target.type`: Must be 'phone_number' or 'email_address'
+    - `feedbacks.*.target.value`: Validated based on the target type
+  - `feedbacks.*.type`: Required string identifier for the feedback type (max 100 characters)
+  - `feedbacks.*.signals`: Optional browser/device information for fraud detection
+    - `feedbacks.*.signals.ip_address`: Valid IP address
+    - `feedbacks.*.signals.user_agent`: Browser user agent string
+    - `feedbacks.*.signals.device_fingerprint`: Device identification
+    - And more browser-related fields
+  - `feedbacks.*.metadata`: Optional custom tracking data
+    - `feedbacks.*.metadata.user_id`: Your internal user ID
+    - `feedbacks.*.metadata.source`: Request source identifier
+    - `feedbacks.*.metadata.campaign_id`: Marketing campaign tracking
+    - `feedbacks.*.metadata.reference_id`: Reference identifier
+    - `feedbacks.*.metadata.custom_fields`: Additional custom data
+  - `feedbacks.*.dispatch_id`: Optional ID from Prelude's JavaScript SDK for enhanced fraud detection
 
 **SendTransactionalRequest** includes validation rules for transactional messaging:
 
