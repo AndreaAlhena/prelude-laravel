@@ -42,7 +42,7 @@ class SendFeedbackRequest extends FormRequest
                 'string',
                 function ($attribute, $value, $fail) {
                     $index = explode('.', $attribute)[1];
-                    $type = request()->input("feedbacks.{$index}.target.type");
+                    $type = $this->input("feedbacks.{$index}.target.type");
                     
                     if ($type === 'phone_number') {
                         if (!preg_match('/^\+[1-9]\d{6,14}$/', $value)) {
