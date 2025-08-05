@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PreludeSo\Laravel;
 
 use Illuminate\Support\ServiceProvider;
+
 use PreludeSo\Laravel\Console\Commands\PreludeInstallCommand;
 use PreludeSo\SDK\PreludeClient;
 
