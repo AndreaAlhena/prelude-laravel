@@ -1,7 +1,7 @@
 {
     "name": "prelude-so/laravel",
     "description": "Laravel integration package for prelude-so/sdk",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "type": "library",
     "license": "MIT",
     "authors": [

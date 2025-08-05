@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-08-05
+
 ### Added
 - `CreateVerificationRequest` class extending Laravel's FormRequest with comprehensive validation rules
 - `CheckVerificationRequest` class for validating verification check parameters
@@ -28,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example usage of `PredictOutcomeRequest` in UserController with comprehensive validation
 - Example usage of `SendFeedbackRequest` in UserController with comprehensive validation
 - Example usage of `SendTransactionalRequest` in UserController with comprehensive validation
-- Comprehensive test suite with actual data validation scenarios
+- Comprehensive test suite with actual data validation scenarios using Pest framework
 - Test coverage for both valid and invalid data cases across all validation rules
 - Support for `illuminate/foundation` package
 
@@ -43,6 +45,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated Pest dependencies to support both v2 and v3
 - Removed redundant laravel/framework and illuminate/foundation dependencies
 - Removed public `prelude()` method from `InteractsWithPrelude` trait to improve encapsulation
+- Refactored test suites from PHPUnit to Pest framework for better readability and maintainability
+- Improved test validation logic to properly test FormRequest validation rules
+- Fixed validation logic in SendFeedbackRequest to use `$this->input()` for proper test compatibility
+
+### Fixed
+- Phone number validation edge cases in test suites
+- Custom validation function compatibility with test environments
 
 ## [1.0.1] - 2025-08-04
 
