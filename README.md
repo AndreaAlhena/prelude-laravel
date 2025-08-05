@@ -110,6 +110,43 @@ class UserController extends Controller
 }
 ```
 
+#### SendTransactionalRequest
+
+For sending transactional messages with comprehensive validation:
+
+```php
+use PreludeSo\Laravel\Http\Requests\SendTransactionalRequest;
+
+class MessageController extends Controller
+{
+    public function sendTransactional(SendTransactionalRequest $request)
+    {
+        // All validation is handled automatically
+        $to = $request->validated('to');
+        $templateId = $request->validated('template_id');
+        $options = $request->validated('options');
+        $metadata = $request->validated('metadata');
+        
+        // Create options object for SDK if provided
+        $optionsObject = null;
+        if ($options) {
+            $optionsObject = new \PreludeSo\Sdk\Options($options);
+        }
+        
+        // Send transactional message using the SDK
+        $result = Prelude::transactional()->send($to, $templateId, $optionsObject);
+        
+        return response()->json([
+            'message_id' => $result->getId(),
+            'status' => $result->getStatus(),
+            'sent_at' => $result->getSentAt(),
+            'recipient' => $to,
+            'template_id' => $templateId,
+        ]);
+    }
+}
+```
+
 ### Complete Examples
 
 For complete working examples, see the [`examples/UserController.php`](examples/UserController.php) file which demonstrates:
@@ -257,6 +294,34 @@ class VerificationController extends Controller
 
 - **Code** (required): Verification code validation
   - `code`: String with length between 4-10 characters
+
+**SendTransactionalRequest** includes validation rules for transactional messaging:
+
+- **To** (required): Recipient validation
+  - `to`: Valid phone number (international format, 7-15 digits) or email address
+
+- **Template ID** (required): Message template
+  - `template_id`: String identifier for the message template (max 255 characters)
+
+- **Options** (optional): Message configuration
+  - `options.from`: Sender identifier
+  - `options.channel`: Delivery method (sms, email, whatsapp, voice)
+  - `options.priority`: Message priority (low, normal, high)
+  - `options.scheduled_at`: Schedule message for future delivery
+  - `options.callback_url`: URL for delivery status callbacks
+  - `options.webhook_url`: URL for webhook notifications
+  - `options.variables`: Template variables for personalization
+  - `options.attachments`: File attachments (URLs)
+  - `options.reply_to`: Reply-to email address
+  - `options.subject`: Email subject line
+  - `options.tags`: Message tags for categorization
+
+- **Metadata** (optional): Custom tracking data
+  - `metadata.user_id`: Your internal user ID
+  - `metadata.source`: Request source identifier
+  - `metadata.campaign_id`: Marketing campaign tracking
+  - `metadata.reference_id`: External reference ID
+  - `metadata.custom_fields`: Additional custom data
 
 ## Configuration Options
 
