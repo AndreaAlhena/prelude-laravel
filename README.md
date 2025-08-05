@@ -154,7 +154,11 @@ class VerificationService
 
 ### Form Requests with Prelude Integration
 
-The package provides a `CreateVerificationRequest` class that extends Laravel's FormRequest with comprehensive validation rules for all Prelude SDK parameters:
+The package provides Form Request classes that extend Laravel's FormRequest with comprehensive validation rules for Prelude SDK parameters:
+
+#### CreateVerificationRequest
+
+For creating verifications with full parameter validation:
 
 ```php
 use PreludeSo\Laravel\Http\Requests\CreateVerificationRequest;
@@ -183,9 +187,41 @@ class CreateOtpRequest extends CreateVerificationRequest
 }
 ```
 
+#### CheckVerificationRequest
+
+For checking verification codes with target and code validation:
+
+```php
+use PreludeSo\Laravel\Http\Requests\CheckVerificationRequest;
+
+class VerificationController extends Controller
+{
+    public function checkVerification(CheckVerificationRequest $request)
+    {
+        // All validation is handled automatically
+        $target = $request->validated('target');
+        $code = $request->validated('code');
+        
+        // Create target object for SDK
+        $targetObject = new \PreludeSo\Sdk\Target(
+            $target['value'],
+            $target['type']
+        );
+        
+        // Check verification using the SDK
+        $result = Prelude::verification()->check($targetObject, $code);
+        
+        return response()->json([
+            'success' => $result->isSuccess(),
+            'status' => $result->getStatus()->value
+        ]);
+    }
+}
+```
+
 #### Supported Validation Parameters
 
-The `CreateVerificationRequest` includes validation rules for all SDK parameters:
+**CreateVerificationRequest** includes validation rules for all SDK parameters:
 
 - **Target** (required): Phone number or email validation
   - `target.type`: Must be 'phone_number' or 'email_address'
@@ -212,6 +248,15 @@ The `CreateVerificationRequest` includes validation rules for all SDK parameters
 
 - **Dispatch ID** (optional): Frontend SDK integration
   - `dispatch_id`: ID from Prelude's JavaScript SDK for enhanced fraud detection
+
+**CheckVerificationRequest** includes validation rules for verification checking:
+
+- **Target** (required): Phone number or email validation
+  - `target.type`: Must be 'phone_number' or 'email_address'
+  - `target.value`: Validated based on the target type
+
+- **Code** (required): Verification code validation
+  - `code`: String with length between 4-10 characters
 
 ## Configuration Options
 
