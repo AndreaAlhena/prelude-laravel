@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use PreludeSo\Laravel\Facades\Prelude;
 use PreludeSo\Laravel\Http\Requests\CheckVerificationRequest;
 use PreludeSo\Laravel\Http\Requests\CreateVerificationRequest;
+use PreludeSo\Laravel\Http\Requests\LookupRequest;
 use PreludeSo\Laravel\Http\Requests\PredictOutcomeRequest;
 use PreludeSo\Laravel\Http\Requests\SendFeedbackRequest;
 use PreludeSo\Laravel\Http\Requests\SendTransactionalRequest;
@@ -318,6 +319,41 @@ class UserController extends Controller
                         'has_metadata' => !empty($feedback['metadata']),
                     ];
                 }, $feedbacks),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Example: Lookup phone number information.
+     */
+    public function lookupPhoneNumber(LookupRequest $request): JsonResponse
+    {
+        try {
+            // All validation is handled automatically
+            $phoneNumber = $request->validated('phone_number');
+            $type = $request->validated('type', []);
+            
+            // Lookup phone number using the SDK
+            $result = Prelude::lookup()->lookup($phoneNumber, $type);
+            
+            return response()->json([
+                'phone_number' => $result->getPhoneNumber(),
+                'country_code' => $result->getCountryCode(),
+                'line_type' => $result->getLineType()?->value,
+                'caller_name' => $result->getCallerName(),
+                'flags' => array_map(fn($flag) => $flag->value, $result->getFlags()),
+                'network_info' => [
+                    'carrier_name' => $result->getNetworkInfo()->getCarrierName(),
+                    'mcc' => $result->getNetworkInfo()->getMcc(),
+                    'mnc' => $result->getNetworkInfo()->getMnc(),
+                ],
+                'original_network_info' => [
+                    'carrier_name' => $result->getOriginalNetworkInfo()->getCarrierName(),
+                    'mcc' => $result->getOriginalNetworkInfo()->getMcc(),
+                    'mnc' => $result->getOriginalNetworkInfo()->getMnc(),
+                ],
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
