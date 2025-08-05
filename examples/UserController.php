@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use PreludeSo\Laravel\Facades\Prelude;
+use PreludeSo\Laravel\Http\Requests\CheckVerificationRequest;
 use PreludeSo\Laravel\Http\Requests\CreateVerificationRequest;
 use PreludeSo\Laravel\Traits\InteractsWithPrelude;
 use PreludeSo\Sdk\PreludeClient;
@@ -80,6 +81,36 @@ class UserController extends Controller
                 'verification_id' => $verification->getId(),
                 'status' => $verification->getStatus(),
                 'expires_at' => $verification->getExpiresAt()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Example: Check verification with comprehensive validation using CheckVerificationRequest.
+     */
+    public function checkVerificationWithValidation(CheckVerificationRequest $request): JsonResponse
+    {
+        try {
+            // All validation is handled by CheckVerificationRequest
+            // Access validated data safely
+            $target = $request->validated('target');
+            $code = $request->validated('code');
+            
+            // Create target object for SDK
+            $targetObject = new \PreludeSo\Sdk\Target(
+                $target['value'],
+                $target['type']
+            );
+            
+            // Check verification using the SDK
+            $result = Prelude::verification()->check($targetObject, $code);
+            
+            return response()->json([
+                'success' => $result->isSuccess(),
+                'status' => $result->getStatus()->value,
+                'target_type' => $target['type']
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
