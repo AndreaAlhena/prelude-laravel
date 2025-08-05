@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Validator;
+
 use PreludeSo\Laravel\Http\Requests\LookupRequest;
 
 test('passes validation with valid phone number only', function (): void {

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Validator;
+
 use PreludeSo\Laravel\Http\Requests\SendTransactionalRequest;
 
 test('validates valid phone number recipient', function () {
