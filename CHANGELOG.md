@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.1] - 2025-08-07
 
 ### Added
 - `LookupRequest` class for validating phone number lookup parameters
@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example usage of `LookupRequest` in UserController with comprehensive response handling
 - Complete test suite for LookupRequest with 12 test cases covering valid and invalid scenarios
 - Documentation for LookupRequest usage and validation parameters in README.md
+- Webhook service support in Prelude facade with `webhook()` method
+- WebhookService integration with SDK v1.2.1+ for webhook management
+- Comprehensive test coverage for webhook service functionality including singleton behavior and type differentiation
+
+### Fixed
+- Corrected webhook service documentation in README.md to reflect actual SDK methods
+- Updated webhook service examples to use `processWebhook()` method instead of CRUD operations
 
 ## [1.1.0] - 2025-08-05
 

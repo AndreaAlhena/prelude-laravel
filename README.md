@@ -73,6 +73,10 @@ $lookup = Prelude::lookup()->phoneNumber('+1234567890');
 
 // Send transactional message
 $message = Prelude::transactional()->send('+1234567890', 'Your verification code is 123456');
+
+// Process webhook data (requires SDK v1.2.1+)
+$webhookData = json_decode(request()->getContent(), true);
+$webhookResult = Prelude::webhook()->processWebhook($webhookData);
 ```
 
 ### Dependency Injection
