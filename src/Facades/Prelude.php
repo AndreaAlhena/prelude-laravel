@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace PreludeSo\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use PreludeSo\SDK\Services\{LookupService, TransactionalService, VerificationService, WatchService, WebhookService};
 
 /**
  * @method static \PreludeSo\SDK\Services\LookupService lookup()
  * @method static \PreludeSo\SDK\Services\TransactionalService transactional()
  * @method static \PreludeSo\SDK\Services\VerificationService verification()
  * @method static \PreludeSo\SDK\Services\WatchService watch()
+ * @method static \PreludeSo\SDK\Services\WebhookService webhook()
  *
  * @see \PreludeSo\SDK\PreludeClient
  */
@@ -27,7 +29,7 @@ class Prelude extends Facade
     /**
      * Get lookup service.
      */
-    public static function lookup(): mixed
+    public static function lookup(): LookupService
     {
         return static::getFacadeRoot()->lookup();
     }
@@ -35,7 +37,7 @@ class Prelude extends Facade
     /**
      * Get transactional service.
      */
-    public static function transactional(): mixed
+    public static function transactional(): TransactionalService
     {
         return static::getFacadeRoot()->transactional();
     }
@@ -43,7 +45,7 @@ class Prelude extends Facade
     /**
      * Get verification service.
      */
-    public static function verification(): mixed
+    public static function verification(): VerificationService
     {
         return static::getFacadeRoot()->verification();
     }
@@ -51,8 +53,16 @@ class Prelude extends Facade
     /**
      * Get watch service.
      */
-    public static function watch(): mixed
+    public static function watch(): WatchService
     {
         return static::getFacadeRoot()->watch();
+    }
+
+    /**
+     * Get webhook service.
+     */
+    public static function webhook(): \PreludeSo\SDK\Services\WebhookService
+    {
+        return static::getFacadeRoot()->webhook();
     }
 }
